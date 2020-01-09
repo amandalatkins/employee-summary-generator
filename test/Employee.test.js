@@ -12,31 +12,34 @@ describe("Employee", () => {
 
         });
         
-        it("should throw an error if three parameters are not supplied", () => {
-            var employee = new Employee();
-            var employee2 = new Employee("Todd","Manager");
-            expect(employee).toThrow();
-            expect(employee2).toThrow();
+        it("should assign ids sequentially", () => {
+            var employee = new Employee("Eric","Intern","eric@example.com");
+            var employee2 = new Employee("Todd","Manager", "todd@todd.com");
+            expect(employee2.id).toEqual(employee.id+1);
         });
 
     });
 
     describe("getName", () => {
-
         it("should return the 'name' value as a string", () => {
             var employee = new Employee("Todd","Manager","todd@todd.com");
             expect(employee.getName()).toEqual("Todd");
             expect(typeof employee.getName()).toEqual("string");
         });
+    });
 
-        it(
-
+    describe("getTitle", () => {
+        it("should return the 'title' value as a string", () => {
+            var employee = new Employee("Todd","Manager","todd@todd.com");
+            expect(employee.getTitle()).toEqual("Manager");
+            expect(typeof employee.getTitle()).toEqual("string");
+        });
     });
 
     describe("getId", () => {
         it("should return the 'id' value as a number", () => {
             var employee = new Employee("Todd","Manager","todd@todd.com");
-            expect(employee.getId()).toEqual(1);
+            expect(employee.getId()).toEqual(employee.id);
             expect(typeof employee.getId()).toEqual("number");
         });
     });
