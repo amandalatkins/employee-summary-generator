@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Team Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/d9b905f9e6.js" crossorigin="anonymous"></script>
+    <style>
+    
+        .team-member .list-group-item img {
+            width: 23px;
+            height: auto;
+            margin-right: 8px;
+            margin-top: -1px;
+        }
+
+        .team-member {
+            border:none;
+        }
+
+        .team-member .member-icon {
+            margin-bottom: 1rem;
+            font-size: 80px;
+        }
+        .team-member .list-group {
+            margin-top: 1em;
+        }
+        .team-member .list-group-item i {
+            margin-right: 5px;
+        }
+
+        .team-member.manager {
+            background-color: #f03e3e;
+        }
+        .team-member.manager .member-icon {
+            color: #fff;
+        }
+        .team-member.manager a { 
+            color: #f03e3e;
+        }
+        .team-member.manager h3, .team-member.manager p {
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-4 text-center">My Team</h1>
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-md-3 col-lg-4">
+                <div class="card team-member manager">
+                    <div class="card-body">
+                        <div class="text-center">
+                        <i class="fas fa-user-tie member-icon"></i>
+                        
+                        <h3 class="card-title">Amanda Atkins</h3>
+                        <p class="card-text">Manager &bull; Senior Engineer</p>
+                        </div>
+                      <ul class="list-group">
+                        <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:amanda@example.com">amanda@atkinsfam.com</a></li>
+                        <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: 123</li>
+                        <li class="list-group-item"><i class="fab fa-github"></i><a href="https://github.com/amandalatkins">amandalatkins</a></li>
+                      </ul>
+                    </div>
+                  </div>
+            </div>
+
+            <div class="col-md-3 col-lg-4">
+                <div class="card team-member engineer">
+                    <div class="card-body">
+                        <div class="text-center">
+                        <i class="fas fa-user-tie member-icon"></i>
+                        
+                        <h3 class="card-title">Amanda Atkins</h3>
+                        <p class="card-text">Engineer &bull; Senior Engineer</p>
+                        </div>
+                      <ul class="list-group">
+                        <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:amanda@example.com">amanda@atkinsfam.com</a></li>
+                        <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: 123</li>
+                        <li class="list-group-item"><i class="fab fa-github"></i><a href="https://github.com/amandalatkins">amandalatkins</a></li>
+                      </ul>
+                    </div>
+                  </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
