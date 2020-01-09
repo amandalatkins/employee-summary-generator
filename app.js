@@ -138,9 +138,7 @@ function renderTeamHTML() {
         return askAddNewEmployee();
     }
 
-    team.manager.forEach(item => {
-        html += loadTemplate("Manager",item);
-    });
+    html += loadTemplate("Manager",team.manager);
 
     team.engineers.forEach(item => {
         html += loadTemplate("Engineer",item);
@@ -152,6 +150,24 @@ function renderTeamHTML() {
 
     html += mainTemplateEnd();
 
+    var filename = sanitizeFilename(teamName);
+
+    fs.writeFile("./output/"+filename+".html",html,(err) => {
+        if (err) throw err;
+        console.log(`Your ${teamName} summary file has been created!`);
+    });
+
+}
+
+function sanitizeFilename(filename) {
+    var letters = "abcdefghijklmnopqrstuvwxyz";
+    return filename.split('').map(item => {
+        if(letters.indexOf(item.toLowerCase()) === -1) {
+            return '';
+        } else {
+            return item.toLowerCase();
+        }
+    }).join('');
 }
 
 function loadTemplate(type, details) {
@@ -165,8 +181,8 @@ function loadTemplate(type, details) {
                     <p class="card-text">${details.getRole()} &bull; ${details.getTitle()}</p>
                 </div>
               <ul class="list-group">
-                <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:${details.getEmail();}">${details.getEmail()}</a></li>
-                <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: ${details.getId();}</li>
+                <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:${details.getEmail()}">${details.getEmail()}</a></li>
+                <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: ${details.getId()}</li>
                 <li class="list-group-item"><i class="fas fa-door-open"></i>Office: ${details.getOfficeNumber()}</li>
               </ul>
             </div>
