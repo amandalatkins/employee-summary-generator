@@ -17,7 +17,7 @@ describe("Intern", () => {
 
             var intern = new Intern("Todd","Intern","todd@todd.com","UNC");
             expect(intern.getSchool()).toEqual("UNC");
-            expect(typeof intern.getGithub()).toEqual("string");
+            expect(typeof intern.getSchool()).toEqual("string");
         });
 
     });
