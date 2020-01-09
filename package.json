@@ -1,0 +1,27 @@
+{
+  "name": "empsum",
+  "version": "1.0.0",
+  "description": "Accepts user input about employees and generates an HTML summary",
+  "main": "app.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amandalatkins/employee-summary-generator.git"
+  },
+  "author": "Amanda Atkins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amandalatkins/employee-summary-generator/issues"
+  },
+  "homepage": "https://github.com/amandalatkins/employee-summary-generator#readme",
+  "dependencies": {
+    "inquirer": "^7.0.3",
+    "jest": "^24.9.0"
+  }
+}
