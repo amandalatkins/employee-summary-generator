@@ -24,8 +24,8 @@ Run `npm install` to install all dependencies.
 node app.js
 ```
 
-### Preview:
-![Application Preview](images/demo.gif)
+### HTML Output Preview:
+![HTML Output Preview](output/screenshot.png)
 
 ## Code Snippets
 
@@ -120,9 +120,12 @@ function populateTemplate(main, html, details) {
 
 ## Built With
 * [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-* [NodeJS](https://nodejs.org/)
+* [NodeJS](https://nodejs.org)
+* [Bootstrap](https://getbootstrap.com)
+* [Test Driven Development](https://www.freecodecamp.org/news/test-driven-development-what-it-is-and-what-it-is-not-41fa6bca02a2/)
 * Node Packages:
     * [Inquirer](https://www.npmjs.com/package/inquirer)
+    * [Jest](https://www.npmjs.com/package/jest)
 
 ## Authors
 Amanda Atkins
