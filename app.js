@@ -6,10 +6,20 @@ const Intern = require('./lib/Intern');
 // Include node modules
 const fs = require('fs');
 const inquirer = require('inquirer');
+const util = require('util')
+const readFileAsync = util.promisify(fs.readFile);
 
 // Declare global variables
 var teamName;
 const team = {manager: {}, engineers: [], interns: []};
+
+//Test Data
+// const team = {
+//     manager: new Manager("Amanda","The Manager","amanda@example.com",123),
+//     engineers: [new Engineer("Roger","Senior Engineer","roger@example.com","rogerdev")],
+//     interns: [new Intern("Lil Johnny","Assistant","johnny@example.com","UNC")]
+// }
+
 var managerTemplate;
 var engineerTemplate;
 var internTemplate;
@@ -18,6 +28,7 @@ var mainTemplate;
 init();
 
 function init() {
+    loadTemplates();
     askTeamName();
 }
 
@@ -123,7 +134,7 @@ function createEmployee(answers, type) {
 
 function renderTeamHTML() {
 
-    var html = mainTemplateStart();
+    var html = "";
 
     if (!team.manager.name) {
         console.log("Must have a Manager.");
@@ -138,17 +149,17 @@ function renderTeamHTML() {
         return askAddNewEmployee();
     }
 
-    html += loadTemplate("Manager",team.manager);
+    html += populateTemplate(false, managerTemplate, team.manager);
 
     team.engineers.forEach(item => {
-        html += loadTemplate("Engineer",item);
+        html += populateTemplate(false, engineerTemplate, item);
     });
 
     team.interns.forEach(item => {
-        html += loadTemplate("Intern",item);
+        html += populateTemplate(false, internTemplate, item);
     });
 
-    html += mainTemplateEnd();
+    html = populateTemplate(true, mainTemplate, html);
 
     var filename = sanitizeFilename(teamName);
 
@@ -160,9 +171,9 @@ function renderTeamHTML() {
 }
 
 function sanitizeFilename(filename) {
-    var letters = "abcdefghijklmnopqrstuvwxyz";
+    var allowed = "abcdefghijklmnopqrstuvwxyz0123456789";
     return filename.split('').map(item => {
-        if(letters.indexOf(item.toLowerCase()) === -1) {
+        if(allowed.indexOf(item.toLowerCase()) === -1) {
             return '';
         } else {
             return item.toLowerCase();
@@ -170,136 +181,85 @@ function sanitizeFilename(filename) {
     }).join('');
 }
 
-function loadTemplate(type, details) {
-    if (type === "Manager") {
-        return `<div class="col-md-6 col-lg-4">
-        <div class="card team-member manager">
-            <div class="card-body">
-                <div class="text-center text-white">
-                    <i class="fas fa-user-tie member-icon"></i>
-                    <h3 class="card-title">${details.getName()}</h3>
-                    <p class="card-text">${details.getRole()} &bull; ${details.getTitle()}</p>
-                </div>
-              <ul class="list-group">
-                <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:${details.getEmail()}">${details.getEmail()}</a></li>
-                <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: ${details.getId()}</li>
-                <li class="list-group-item"><i class="fas fa-door-open"></i>Office: ${details.getOfficeNumber()}</li>
-              </ul>
-            </div>
-          </div>
-    </div>`;
-    } else if (type === "Engineer") {
-        return `<div class="col-md-6 col-lg-4">
-        <div class="card team-member engineer">
-            <div class="card-body">
-                <div class="text-center text-white">
-                    <i class="fas fa-code member-icon"></i>
-                    <h3 class="card-title">${details.getName()}</h3>
-                    <p class="card-text">${details.getRole()} &bull; ${details.getTitle()}</p>
-                </div>
-                <ul class="list-group">
-                    <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:${details.getEmail()}">${details.getEmail()}</a></li>
-                    <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: ${details.getId()}</li>
-                    <li class="list-group-item"><i class="fab fa-github"></i><a href="https://github.com/${details.getGithub()}">${details.getGithub()}</a></li>
-                </ul>
-            </div>
-          </div>
-    </div>`;
-    } else if (type === "Intern") {
-        return `<div class="col-md-6 col-lg-4">
-        <div class="card team-member intern">
-            <div class="card-body">
-                <div class="text-center text-white">
-                    <i class="fas fa-user-graduate member-icon"></i>
-                    <h3 class="card-title">${details.getName()}</h3>
-                    <p class="card-text">${details.getRole()} &bull; ${details.getTitle()}</p>
-                </div>
-                <ul class="list-group">
-                    <li class="list-group-item"><i class="fas fa-envelope"></i><a href="mailto:${details.getEmail()}">${details.getEmail()}</a></li>
-                    <li class="list-group-item"><i class="fas fa-fingerprint"></i>ID: ${details.getId()}</li>
-                    <li class="list-group-item"><i class="fas fa-university"></i>${details.getSchool()}</li>
-                </ul>
-            </div>
-          </div>
-    </div>`;
+function populateTemplate(main, html, details) {
+    var templateReplacements = [];
+    if (!main) {
+        templateReplacements = [
+            {
+                find: "zzzEmployeeNamezzz",
+                replace: details.getName()
+            },
+            {
+                find: "zzzEmployeeRolezzz",
+                replace: details.getRole()
+            },
+            {
+                find: "zzzEmployeeTitlezzz",
+                replace: details.getTitle()
+            },
+            {
+                find: "zzzEmployeeIdzzz",
+                replace: details.getId()
+            },
+            {
+                find: "zzzEmployeeEmailzzz",
+                replace: details.getEmail()
+            }
+        ]
+
+        if (details.getRole() === "Manager") {
+            templateReplacements.push({
+                find: "zzzEmployeeOfficezzz",
+                replace: details.getOfficeNumber()
+            });
+        } else if (details.getRole() === "Engineer") {
+            templateReplacements.push({
+                find: "zzzEmployeeGithubzzz",
+                replace: details.getGithub()
+            });
+        } else if (details.getRole() === "Intern") {
+            templateReplacements.push({
+                find: "zzzEmployeeSchoolzzz",
+                replace: details.getSchool()
+            });
+        }
+    } else {
+        templateReplacements = [{
+            find: "zzzTeamNamezzz",
+            replace: teamName
+        },{
+            find: "zzzTeamSummaryzzz",
+            replace: details
+        }]
     }
+
+    templateReplacements.forEach(filter => {
+        var regex = new RegExp(filter.find, "g");
+        html = html.replace(regex, filter.replace);
+    });
+
+    return html;
+
 }
 
-function mainTemplateStart() {
-    return `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>${teamName} Profile</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://kit.fontawesome.com/d9b905f9e6.js" crossorigin="anonymous"></script>
-        <style>
-        
-            .team-member .list-group-item img {
-                width: 23px;
-                height: auto;
-                margin-right: 8px;
-                margin-top: -1px;
-            }
-    
-            .team-member {
-                border:none;
-                margin-bottom: 2rem;
-            }
-    
-            .team-member .member-icon {
-                margin-bottom: 1rem;
-                font-size: 80px;
-            }
-            .team-member .list-group {
-                margin-top: 1em;
-            }
-            .team-member .list-group-item i {
-                margin-right: 5px;
-            }
-    
-            .team-member.manager {
-                background-color: #f03e3e;
-            }
-            .team-member.manager a { 
-                color: #f03e3e;
-            }
-    
-            .team-member.engineer {
-                background-color: #228be6;
-            }
-    
-            .team-member.engineer a {
-                color: #228be6;
-            }
-    
-            .team-member.intern {
-                background-color: #40c057;
-            }
-    
-            .team-member.intern a {
-                color:#40c057;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="jumbotron">
-            <div class="container">
-                <h1 class="display-4 text-center">${teamName}</h1>
-            </div>
-        </div>
-        <div class="container">
-    
-            <div class="row">`;
-}
+function loadTemplates() {
+    fs.readFile("templates/manager.html", "utf8", (err,data) => {
+        if (err) return console.log(err);
+        managerTemplate = data;
+    });
 
-function mainTemplateEnd() {
-    return `</div>
+    fs.readFile("templates/engineer.html","utf8", (err,data) => {
+        if (err) return console.log(err);
+        engineerTemplate = data;
+    });
 
-    </div>
+    fs.readFile("templates/intern.html","utf8", (err,data) => {
+        if (err) return console.log(err);
+        internTemplate = data;
+    });
 
-</body>
-</html>`;
+    fs.readFile("templates/main.html","utf8",(err,data) => {
+        if (err) return console.log(err);
+        mainTemplate = data;
+    });
 }
