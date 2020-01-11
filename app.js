@@ -6,8 +6,6 @@ const Intern = require('./lib/Intern');
 // Include node modules
 const fs = require('fs');
 const inquirer = require('inquirer');
-const util = require('util')
-const readFileAsync = util.promisify(fs.readFile);
 
 // Declare global variables
 var teamName;
