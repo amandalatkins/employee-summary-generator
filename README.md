@@ -31,7 +31,7 @@ node app.js
 
 The following code snippet shows how this application uses classes to maintain uniformity when adding new team members
 
-```
+```javascript
 function createEmployee(answers, type) {
 
     if (type === "Manager") {
@@ -54,7 +54,7 @@ function createEmployee(answers, type) {
 
 The following code snippet shows how this application populates the HTML templates with data supplied by the user. Each template has unique strings of characters that are replaced using `.replace()`
 
-```
+```javascript
 // This function renders the PDF using electron-html-to
 function populateTemplate(main, html, details) {
     var templateReplacements = [];
